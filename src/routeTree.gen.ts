@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as EmailGeneratorRouteImport } from './routes/email-generator'
+import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as ServicesRouteImport } from './routes/services'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,6 +37,16 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmailGeneratorRoute = EmailGeneratorRouteImport.update({
+  id: '/email-generator',
+  path: '/email-generator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlannerRoute = PlannerRouteImport.update({
+  id: '/planner',
+  path: '/planner',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
@@ -46,6 +58,8 @@ export interface FileRoutesByFullPath {
   '/assistant': typeof AssistantRoute
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
+  '/email-generator': typeof EmailGeneratorRoute
+  '/planner': typeof PlannerRoute
   '/services': typeof ServicesRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +67,8 @@ export interface FileRoutesByTo {
   '/assistant': typeof AssistantRoute
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
+  '/email-generator': typeof EmailGeneratorRoute
+  '/planner': typeof PlannerRoute
   '/services': typeof ServicesRoute
 }
 export interface FileRoutesById {
@@ -61,14 +77,38 @@ export interface FileRoutesById {
   '/assistant': typeof AssistantRoute
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
+  '/email-generator': typeof EmailGeneratorRoute
+  '/planner': typeof PlannerRoute
   '/services': typeof ServicesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/assistant' | '/book' | '/contact' | '/services'
+  fullPaths:
+    | '/'
+    | '/assistant'
+    | '/book'
+    | '/contact'
+    | '/email-generator'
+    | '/planner'
+    | '/services'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/assistant' | '/book' | '/contact' | '/services'
-  id: '__root__' | '/' | '/assistant' | '/book' | '/contact' | '/services'
+  to:
+    | '/'
+    | '/assistant'
+    | '/book'
+    | '/contact'
+    | '/email-generator'
+    | '/planner'
+    | '/services'
+  id:
+    | '__root__'
+    | '/'
+    | '/assistant'
+    | '/book'
+    | '/contact'
+    | '/email-generator'
+    | '/planner'
+    | '/services'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +116,8 @@ export interface RootRouteChildren {
   AssistantRoute: typeof AssistantRoute
   BookRoute: typeof BookRoute
   ContactRoute: typeof ContactRoute
+  EmailGeneratorRoute: typeof EmailGeneratorRoute
+  PlannerRoute: typeof PlannerRoute
   ServicesRoute: typeof ServicesRoute
 }
 
@@ -109,6 +151,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/email-generator': {
+      id: '/email-generator'
+      path: '/email-generator'
+      fullPath: '/email-generator'
+      preLoaderRoute: typeof EmailGeneratorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planner': {
+      id: '/planner'
+      path: '/planner'
+      fullPath: '/planner'
+      preLoaderRoute: typeof PlannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
@@ -124,6 +180,8 @@ const rootRouteChildren: RootRouteChildren = {
   AssistantRoute: AssistantRoute,
   BookRoute: BookRoute,
   ContactRoute: ContactRoute,
+  EmailGeneratorRoute: EmailGeneratorRoute,
+  PlannerRoute: PlannerRoute,
   ServicesRoute: ServicesRoute,
 }
 export const routeTree = rootRouteImport
