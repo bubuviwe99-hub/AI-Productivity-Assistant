@@ -56,7 +56,7 @@ const prompts = [
 
 function PlannerPage() {
   const run = useServerFn(generatePlan);
-  const [prompt, setPrompt] = useState(prompts[0]);
+  const [prompt, setPrompt] = useState(prompts[0] ?? "");
   const [plan, setPlan] = useState<GeneratedPlan | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(false);
@@ -75,7 +75,8 @@ function PlannerPage() {
       setTasks(
         result.tasks.map((t, i) => ({ ...t, id: `${i}-${t.start}`, done: false })),
       );
-    } catch {
+    } catch (err) {
+      console.error("Planner generation failed:", err);
       setError("The planner could not generate a schedule. Try rephrasing your request.");
     } finally {
       setLoading(false);

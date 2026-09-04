@@ -7,11 +7,11 @@ import { SiteLayout, PageHeader, AiNotice } from "@/components/site/SiteLayout";
 import { services, timeSlots } from "@/data/salon";
 import { cn } from "@/lib/utils";
 
-type Search = { service?: string };
+type Search = { service?: string | undefined };
 
 export const Route = createFileRoute("/book")({
   validateSearch: (search: Record<string, unknown>): Search => ({
-    service: typeof search.service === "string" ? search.service : undefined,
+    service: typeof search["service"] === "string" ? (search["service"] as string) : undefined,
   }),
   head: () => ({
     meta: [
