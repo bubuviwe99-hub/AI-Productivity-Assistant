@@ -108,7 +108,7 @@ Priority: Urgent, High, Medium or Low — bridal and VIP work ranks highest.
 List any double-booking or overlap you notice in "conflicts" (empty array if none).
 Keep "note" under 20 words. Everything is a draft suggestion for a human to approve.`;
 
-    try {
+    const tryStructured = async (): Promise<GeneratedPlan> => {
       const result = streamText({
         model: getGatewayModel(),
         system,
@@ -116,16 +116,43 @@ Keep "note" under 20 words. Everything is a draft suggestion for a human to appr
         output: Output.object({ schema: planSchema }),
       });
       return await result.output;
+    };
+
+    const tryJsonText = async (priorText?: string): Promise<GeneratedPlan> => {
+      const result = streamText({
+        model: getGatewayModel(),
+        system: `${system}\nRespond with ONLY a valid JSON object matching this shape: {"summary": string, "tasks": [{"title","day","start","end","owner","priority","note"}], "conflicts": string[]}. No markdown fences, no commentary.`,
+        prompt: priorText
+          ? `${data.prompt}\n\nYour previous reply was not valid JSON:\n${priorText.slice(0, 800)}\n\nReturn corrected JSON only.`
+          : data.prompt,
+      });
+      const text = await result.text;
+      const raw = text
+        .replace(/```json|```/g, "")
+        .trim()
+        .replace(/^[^{]*/, "")
+        .replace(/[^}]*$/, "");
+      return planSchema.parse(JSON.parse(raw));
+    };
+
+    try {
+      return await tryStructured();
     } catch (error) {
       if (NoObjectGeneratedError.isInstance(error)) {
         try {
-          const raw = (error.text ?? "").replace(/```json|```/g, "");
-          return planSchema.parse(JSON.parse(raw));
-        } catch {
+          return await tryJsonText(error.text ?? undefined);
+        } catch (retryError) {
+          console.error("Planner JSON fallback failed:", retryError);
           throw new Error("The planner couldn't structure that request. Try rephrasing it.");
         }
       }
-      throw error;
+      console.error("Planner generation failed:", error);
+      try {
+        return await tryJsonText();
+      } catch (retryError) {
+        console.error("Planner JSON fallback failed:", retryError);
+        throw new Error("The planner couldn't structure that request. Try rephrasing it.");
+      }
     }
   });
 
