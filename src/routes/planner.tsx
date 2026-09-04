@@ -56,7 +56,7 @@ const prompts = [
 
 function PlannerPage() {
   const run = useServerFn(generatePlan);
-  const [prompt, setPrompt] = useState(prompts[0]);
+  const [prompt, setPrompt] = useState(prompts[0] ?? "");
   const [plan, setPlan] = useState<GeneratedPlan | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(false);

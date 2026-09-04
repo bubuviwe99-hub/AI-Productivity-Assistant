@@ -4,7 +4,7 @@ import { SiteLayout, PageHeader } from "@/components/site/SiteLayout";
 import { categories, services } from "@/data/salon";
 import { cn } from "@/lib/utils";
 
-type Search = { category?: string };
+type Search = { category?: string | undefined };
 
 export const Route = createFileRoute("/services")({
   validateSearch: (search: Record<string, unknown>): Search => ({
