@@ -8,7 +8,7 @@ type Search = { category?: string };
 
 export const Route = createFileRoute("/services")({
   validateSearch: (search: Record<string, unknown>): Search => ({
-    category: typeof search.category === "string" ? search.category : undefined,
+    category: typeof search["category"] === "string" ? (search["category"] as string) : undefined,
   }),
   head: () => ({
     meta: [
